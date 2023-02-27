@@ -1,0 +1,64 @@
+﻿@model ML.Alumno
+@{
+    ViewBag.Title = "GetAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+    <div class="row">
+        <h2>Alumno</h2>
+    </div>
+    <hr />
+    <div class="row">
+        <div style="float:right">
+            @Html.ActionLink("+", "Form", "Alumno", htmlAttributes: new { @class = "btn btn-success" })
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        @if (Model.Alumnos != null)
+        {
+            <table class="table table-dark table-bordered table-responsive table-hover">
+                <thead>
+                    <tr>
+                        <td class="text-center" style=" font-weight:bold;">Editar</td>
+
+                        <td style="display: none;">IdAlumno</td>
+                        <td class="text-center" style=" font-weight:bold;">Nombre</td>
+                        <td class="text-center" style=" font-weight:bold;">Fecha Nacimiento</td>
+                        <td class="text-center" style=" font-weight:bold;">Semestre</td>
+
+                        <td class="text-center" style=" font-weight:bold;">Eliminar</td>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (ML.Alumno alumno in Model.Alumnos)
+                    {
+                        <tr>
+                            <td class="text-center"><a class="btn btn-warning" href="@Url.Action("Form", "Alumno", new { IdAlumno = alumno.IdAlumno })"><i class="bi bi-pencil-square fa-beat" style="color: red;"></i> </a></td>
+
+                            <td class="hidden">@alumno.IdAlumno</td>
+                            <td>@alumno.Nombre @alumno.ApellidoPaterno @alumno.ApellidoMaterno</td>
+                            <td>@alumno.FechaNacimiento</td>
+                            <td class="hidden">@alumno.Semestre.IdSemestre</td>
+                            <td>@alumno.Semestre.Nombre</td>
+
+
+                            <td class="text-center"><a class="btn btn-danger glyphicon glyphicon-erase" href="@Url.Action("Delete", "Alumno", new { IdAlumno = alumno.IdAlumno })" onclick="return confirm('Estas seguro que deseas eliminar este registro?');"></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+
+        }
+        else
+        {
+            <div class="alert alert-danger" role="alert">Ocurrio un error al realizar la consulta </div>
+        }
+    </div>
+</div>
+
+
+
+
