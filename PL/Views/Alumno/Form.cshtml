@@ -30,15 +30,17 @@
                         <div class="col-md-3">
                             @Html.LabelFor(model => model.Nombre)
 
-                            @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", @id = "txtNombre" })
+                            @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", @id = "txtNombre", @onkeypress="SoloLetras(event, 'lblNombre')" })
 
                             @Html.ValidationMessageFor(model => model.Nombre)
+                            @Html.Label(null, "", new {@id ="lblNombre"})
                         </div>
 
                         <div class="col-md-3">
                             @Html.LabelFor(model => model.ApellidoPaterno)
-                            @Html.TextBoxFor(model => model.ApellidoPaterno, new { @class = "form-control", @id = "txtApellidoPaterno" })
+                            @Html.TextBoxFor(model => model.ApellidoPaterno, new { @class = "form-control", @id = "txtApellidoPaterno", @onkeypress="SoloLetras(event, 'lblApellidoPaterno')" })
                             @Html.ValidationMessageFor(model => model.ApellidoPaterno)
+                             @Html.Label(null, "", new {@id ="lblApellidoPaterno"})
                         </div>
 
                         <div class="col-md-3">
@@ -125,77 +127,91 @@
 </div>
 
 @section Scripts {
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="/resources/demos/style.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#ddlPlantel").change(function () {
-                $("#ddlGrupo").empty();
-                $.ajax({
-                    type: 'POST',
-                    url: '@Url.Action("GrupoGetByIdPlantel")',
-                    dataType: 'json',
-                    data: { idPlantel: $("#ddlPlantel").val() },
-                    success: function (grupos) {
-                        $("#ddlGrupo").append('<option value="0">' + 'Seleccione una opción' + '</option>');
-                        $.each(grupos, function (i, grupos) {
-                            $("#ddlGrupo").append('<option value="'
-                                + grupos.idGrupo + '">'
-                                + grupos.nombre + '</option>');
-                        });
-                    },
-                    error: function (ex) {
-                        alert('Failed.' + ex);
-                    }
-                });
-            });
-        });
+<script type="text/javascript">
+           $(document).ready(function () {
+               $("#ddlPlantel").change(function () {
+                   $("#ddlGrupo").empty();
+                   $.ajax({
+                       type: 'POST',
+                       url: '@Url.Action("GrupoGetByIdPlantel")',
+                       dataType: 'json',
+                       data: { idPlantel: $("#ddlPlantel").val() },
+                       success: function (grupos) {
+                           $("#ddlGrupo").append('<option value="0">' + 'Seleccione una opción' + '</option>');
+                           $.each(grupos, function (i, grupos) {
+                               $("#ddlGrupo").append('<option value="'
+                                   + grupos.idGrupo + '">'
+                                   + grupos.nombre + '</option>');
+                           });
+                       },
+                       error: function (ex) {
+                           alert('Failed.' + ex);
+                       }
+                   });
+               });
+           });
 
-        function validateFile() {
-            var allowedExtension = ['jpeg', 'jpg', 'png'];
-            var fileExtension = document.getElementById('fuImage').value.split('.').pop().toLowerCase();
-            var isValidFile = false;
-            for (var index in allowedExtension) {
-                if (fileExtension === allowedExtension[index]) {
-                    isValidFile = true;
-                    break;
-                }
+           function validateFile() {
+               var allowedExtension = ['jpeg', 'jpg', 'png'];
+               var fileExtension = document.getElementById('fuImage').value.split('.').pop().toLowerCase();
+               var isValidFile = false;
+               for (var index in allowedExtension) {
+                   if (fileExtension === allowedExtension[index]) {
+                       isValidFile = true;
+                       break;
+                   }
+               }
+               if (!isValidFile) {
+                   alert('Las extensiones permitidas son : *.' + allowedExtension.join(', *.'));
+                   document.getElementById('fuImage').value = ""
+               }
+               return isValidFile;
+           }
+
+           function readURL(input) {
+               if (input.files && input.files[0]) {
+                   var reader = new FileReader();
+                   reader.onload = function (e) {
+                       $('#Img').attr('src', e.target.result);
+                   };
+                   reader.readAsDataURL(input.files[0]);
+               }
+           }
+
+           //$(function () {
+           //    $("#datepicker").datepicker();
+           //    $("#format").on("change", function () {
+           //        $("#datepicker").datepicker("option", "dateFormat", $(this).val());
+           //    });
+           //});
+
+           $(function () {
+               $("#txtFechaNacimiento").datepicker({
+                   dateFormat: 'dd-mm-yy',
+                   changeMonth: true,
+                   changeYear: true
+               });
+           });
+    function SoloLetras(e, idLabel) {
+           var caracter = e.key;
+           if (!/^[a-zA-Z]/g.test(caracter)) {
+               $('#' + idLabel ).text("Solo se aceptan letras");
+               $('#' + idLabel).css({ "color": "red" });
+               return false;
+           }
+           else {
+               $('#' + controlId).text("");
+               return true;
+           }
             }
-            if (!isValidFile) {
-                alert('Las extensiones permitidas son : *.' + allowedExtension.join(', *.'));
-                document.getElementById('fuImage').value = ""
-            }
-            return isValidFile;
-        }
-
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $('#Img').attr('src', e.target.result);
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        //$(function () {
-        //    $("#datepicker").datepicker();
-        //    $("#format").on("change", function () {
-        //        $("#datepicker").datepicker("option", "dateFormat", $(this).val());
-        //    });
-        //});
-
-        $(function () {
-            $("#txtFechaNacimiento").datepicker({
-                dateFormat: 'dd-mm-yy',
-                changeMonth: true,
-                changeYear: true
-            });
-        });
 
 
-    </script>
+
+
+</script>
 }
