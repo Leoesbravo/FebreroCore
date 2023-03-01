@@ -82,40 +82,55 @@ namespace PL.Controllers
 
 
             ML.Result result = new ML.Result();
-
-            if (alumno.IdAlumno == 0)
+            if (ModelState.IsValid == true)
             {
-                //add 
-                result = BL.Alumno.Add(alumno);
-
-                if (result.Correct)
+                if (alumno.IdAlumno == 0)
                 {
-                    ViewBag.Message = "Se completo el registro satisfactoriamente";
+                    //add 
+                    result = BL.Alumno.Add(alumno);
+
+                    if (result.Correct)
+                    {
+                        ViewBag.Message = "Se completo el registro satisfactoriamente";
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Ocurrio un error al insertar el registro";
+                    }
+
+                    return View("Modal");
                 }
                 else
                 {
-                    ViewBag.Message = "Ocurrio un error al insertar el registro";
-                }
 
-                return View("Modal");
+                    //update
+                    //result = BL.Alumno.Add(alumno);
+
+                    //if (result.Correct)
+                    //{
+                    //    ViewBag.Message = "Se actualizo la información satisfactoriamente";
+                    //}
+                    //else
+                    //{
+                    //    ViewBag.Message = "Ocurrio un error al actualizar el registro";
+                    //}
+                    return View("Modal");
+                }
             }
             else
             {
+                alumno.Semestre = new ML.Semestre();
+                alumno.Horario = new ML.Horarios();
+                alumno.Horario.Grupo = new ML.Grupo();
+                alumno.Horario.Grupo.Plantel = new ML.Plantel();
 
-                //update
-                //result = BL.Alumno.Add(alumno);
+                ML.Result resultSemestre = BL.Semestre.GetAll();
+                ML.Result resultPlantel = BL.Plantel.GetAll();
 
-                //if (result.Correct)
-                //{
-                //    ViewBag.Message = "Se actualizo la información satisfactoriamente";
-                //}
-                //else
-                //{
-                //    ViewBag.Message = "Ocurrio un error al actualizar el registro";
-                //}
-                return View("Modal");
+                alumno.Semestre.Semestres = resultSemestre.Objects;
+                alumno.Horario.Grupo.Plantel.Planteles = resultPlantel.Objects;
+                return View(alumno);
             }
-
 
         }
 
