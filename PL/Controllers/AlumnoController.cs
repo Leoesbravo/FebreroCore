@@ -160,6 +160,12 @@ namespace PL.Controllers
 
             return bytes;
         }      
+        [HttpPost]
+        public JsonResult CambiarStatus(int idAlumno, bool status)
+        {
+            ML.Result result = BL.Alumno.ChangeStatus(idAlumno, status);
 
+            return Json(result);
+        }
     }
 }

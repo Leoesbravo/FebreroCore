@@ -19,7 +19,7 @@
         {
             <table class="table table-dark table-bordered table-responsive table-hover" id="tblAlumno">
                 <thead>
-                    <tr>
+                    <tr >
                         <td class="text-center" style=" font-weight:bold;">Editar</td>
 
                         <td class="d-none">IdAlumno</td>
@@ -27,6 +27,7 @@
                         <td class="text-center" style=" font-weight:bold;">Fecha Nacimiento</td>
                         <td class="text-center" style=" font-weight:bold;">Semestre</td>
                         <td class="text-center" style=" font-weight:bold;">Imagen</td>
+                        <td class="text-center" style=" font-weight:bold;">Status</td>
 
                         <td class="text-center" style=" font-weight:bold;">Eliminar</td>
                     </tr>
@@ -36,14 +37,14 @@
                     @foreach (ML.Alumno alumno in Model.Alumnos)
                     {
                         <tr>
-                            <td class="text-center"><a class="btn btn-warning" href="@Url.Action("Form", "Alumno", new { IdAlumno = alumno.IdAlumno })"><i class="bi bi-pencil-square fa-beat" style="color: red;"></i> </a></td>
+                            <td class="text-center"><a class="btn btn-warning" id="prueba" onmouseover="Animar()" href="@Url.Action("Form", "Alumno", new { IdAlumno = alumno.IdAlumno })"><i class="bi bi-pencil-square fa-beat" style="color: ghostwhite;"></i> </a></td>
 
                             <td class="d-none">@alumno.IdAlumno</td>
                             <td>@alumno.Nombre @alumno.ApellidoPaterno @alumno.ApellidoMaterno</td>
                             <td>@alumno.FechaNacimiento</td>
                             <td>@alumno.Semestre.Nombre</td>
                             <td>
-                                @if (alumno.Imagen != null)
+                                @if (alumno.Imagen != null && alumno.Imagen != "")
                                 {
 
                                     <img id="Img" src="data:image/*;base64,@alumno.Imagen" style="width:250px ; height:250px" />
@@ -51,9 +52,26 @@
                                 }
                                 else
                                 {
-                                    <img id="Img" src="~/Imagenes/SinImagen.png" style="width:250px ; height:250px" />
+                                    <img id="Img" src="~/Imagenes/SinImagen.png" style="width:100px ; height:100px; text-align: center; vertical-align: middle;" />
                                 }
                             </td>
+                            @if (alumno.Status)
+                            {
+                                <td style="text-align: center; vertical-align: middle;">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" checked onchange="ChangeStatus(@alumno.IdAlumno, this)">
+                                    </div>
+                                </td>
+                            }
+                            else
+                            {
+                                <td style="text-align: center; vertical-align: middle;">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" onchange="ChangeStatus(@alumno.IdAlumno, this);">
+                                    </div>
+                                </td>
+                            }
+
 
 
                             <td class="text-center"><a class="btn btn-danger glyphicon glyphicon-erase" href="@Url.Action("Delete", "Alumno", new { IdAlumno = alumno.IdAlumno })" onclick="return confirm('Estas seguro que deseas eliminar este registro?');"></a></td>
@@ -77,11 +95,11 @@
 <script src="https://cdn.datatables.net/1.13.1/js/dataTables.material.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
 
-    <script type="text/javascript">
+<script type="text/javascript">
     $(document).ready(function () {
         $('#tblAlumno').DataTable({
             searching: false,
-            "lengthMenu": [[1, 10, 15, 20, -1], [5, 10, 15, 20, "All"]],
+            "lengthMenu": [[2, 10, 15, 20, -1], [5, 10, 15, 20, "All"]],
             autoWidth: false,
             columnDefs: [
                 {
@@ -94,7 +112,30 @@
             },
          });
     });
-    </script>
+
+        function ChangeStatus(idAlumno,e){
+        var status = e.checked
+         $.ajax({
+                type: 'POST',
+                url: '@Url.Action("CambiarStatus")',
+                dataType: 'json',
+                data: {idAlumno, status},
+                success: {               },
+                error: function (ex) {
+                    alert('Failed.' + ex);
+                }
+            });
+    }
+
+    $(document).ready(function Animar(){
+        $('#prueba').hover(function(){
+            $('#prueba').addClass('fa-beat');
+        },
+        function(){
+            $('#prueba').removeClass('fa-beat');
+        });
+    });
+</script>
 }
 
 

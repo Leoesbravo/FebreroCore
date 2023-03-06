@@ -12,4 +12,9 @@ public partial class Horario
     public int? IdAlumno { get; set; }
 
     public virtual Alumno? IdAlumnoNavigation { get; set; }
+
+
+
+
+    
 }

@@ -19,10 +19,10 @@ public partial class Alumno
 
     public string? Imagen { get; set; }
 
+    public bool? Status { get; set; }
+
     public virtual ICollection<Horario> Horarios { get; } = new List<Horario>();
 
-
-    //Propiedades con Alias de SQL
     public virtual Semestre? IdSemestreNavigation { get; set; }
     public string? SemestreNombre { get; set; }
 }

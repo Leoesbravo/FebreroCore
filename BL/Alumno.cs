@@ -67,6 +67,8 @@ namespace BL
                             alumno.Semestre.IdSemestre = obj.IdSemestre.Value;
                             alumno.Semestre.Nombre = obj.SemestreNombre;
 
+                            alumno.Status = obj.Status.Value;
+
                             result.Objects.Add(alumno);
                         }
                     }
@@ -133,6 +135,37 @@ namespace BL
                 result.Ex = ex;
                 result.Correct = false;
 
+            }
+            return result;
+        }
+        public static ML.Result ChangeStatus(int idAlumno, bool status)
+        {
+            ML.Result result = new ML.Result();
+
+            try
+            {
+                using (DL.IespinozaProgramacionNcapasGf2023Context context = new DL.IespinozaProgramacionNcapasGf2023Context())
+                {                   
+                    int query = context.Database.ExecuteSqlRaw($"AlumnoChangeStatus '{idAlumno}', {status}");
+
+                    if (query >= 1)
+                    {
+                        result.Correct = true;
+                    }
+                    else
+                    {
+                        result.Correct = false;
+                        result.ErrorMessage = "No se insertó el registro";
+                    }
+
+                    result.Correct = true;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Correct = false;
+                result.ErrorMessage = ex.Message;
             }
             return result;
         }

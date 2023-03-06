@@ -24,6 +24,13 @@ namespace ML
         public ML.Semestre Semestre { get; set; }
         public string NombreCompleto { get; set; }
         public string Imagen { get; set; }
+        public bool Status { get; set; }
         public List<object> Alumnos { get; set; }
+
+
+
+
+
+
     }
 }
