@@ -9,6 +9,10 @@ namespace ML
 {
     public class Alumno
     {
+        //Cuando no hay un constructor definido, por defecto se genera uno vacio
+        //Constructor, inicializar los atributos de una clase
+        //generar objetos 
+
         public int IdAlumno { get; set; }
 
         [Required]
@@ -26,11 +30,6 @@ namespace ML
         public string Imagen { get; set; }
         public bool Status { get; set; }
         public List<object> Alumnos { get; set; }
-
-
-
-
-
 
     }
 }

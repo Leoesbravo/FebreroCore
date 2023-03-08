@@ -167,5 +167,33 @@ namespace PL.Controllers
 
             return Json(result);
         }
+        [HttpGet]
+        public ActionResult Login()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Login(string nombre, string apellido)
+        {
+            ML.Result result = BL.Alumno.GetByNombre(nombre);
+            if (result.Correct)
+            {
+                ML.Alumno alumno = (ML.Alumno)result.Object;
+                if(apellido == alumno.ApellidoPaterno)
+                {
+                    return View();
+                }
+                else
+                {
+                    ViewBag.Message ="La contraseña no coincide";
+                    return PartialView("Modal");
+                }
+            }
+            else
+            {
+                ViewBag.Messge = "El usuario no existe";
+                return PartialView("Modal");
+            }
+        }
     }
 }
