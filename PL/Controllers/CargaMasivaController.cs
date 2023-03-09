@@ -4,15 +4,20 @@ namespace PL.Controllers
 {
     public class CargaMasivaController : Controller
     {
+        //Inyeccion de dependencias-- patron de diseño
         private readonly IConfiguration _configuration;
+        private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment;
 
-        public CargaMasivaController(IConfiguration configuration)
+        public CargaMasivaController(IConfiguration configuration, Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment)
         {
             _configuration = configuration;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         public ActionResult CargaMasiva()
         {
+            ML.Alumno alumno = new ML.Alumno();
+
             return View();
         }
         [HttpPost]
@@ -34,7 +39,7 @@ namespace PL.Controllers
                     string extensionArchivo = Path.GetExtension(archivo.FileName).ToLower();
                     string extensionModulo = _configuration["TipoExcel"];
 
-                    if (extensionArchivo == extensionModulo)
+                    if (extensionArchivo == extensionModulo) //validando que sea un archivo excel
                     {
                         string filePath = Path.Combine(_hostingEnvironment.ContentRootPath, folderPath, Path.GetFileNameWithoutExtension(fileName)) + '-' + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xlsx";
 
@@ -46,11 +51,11 @@ namespace PL.Controllers
                             }
 
                             string connectionString = _configuration["ConnectionStringExcel:value"] + filePath;
-                            ML.Result resultMaterias = BL.Materia.ConvertXSLXtoDataTable(connectionString);
+                            ML.Result resultMaterias = BL.Alumno.ConvertXSLXtoDataTable(connectionString);
 
                             if (resultMaterias.Correct)
                             {
-                                ML.Result resultValidacion = BL.Materia.ValidarExcel(resultMaterias.Objects);
+                                ML.Result resultValidacion = BL.Alumno.ValidarExcel(resultMaterias.Objects);
                                 if (resultValidacion.Objects.Count == 0)
                                 {
                                     resultValidacion.Correct = true;
