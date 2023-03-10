@@ -227,7 +227,7 @@ namespace BL
             {
                 using (OleDbConnection context = new OleDbConnection(connString))
                 {
-                    string query = "SELECT * FROM [Sheet1$]";
+                    string query = "SELECT * FROM [Hoja1$]";
                     using (OleDbCommand cmd = new OleDbCommand())
                     {
                         cmd.CommandText = query;
@@ -237,44 +237,39 @@ namespace BL
                         OleDbDataAdapter da = new OleDbDataAdapter();
                         da.SelectCommand = cmd;
 
-                        DataTable tableMateria = new DataTable();
+                        DataTable tableAlumno = new DataTable();
 
-                        da.Fill(tableMateria);
+                        da.Fill(tableAlumno);
 
-                        if (tableMateria.Rows.Count > 0)
+                        if (tableAlumno.Rows.Count > 0)
                         {
                             result.Objects = new List<object>();
 
-                            foreach (DataRow row in tableMateria.Rows)
+                            foreach (DataRow row in tableAlumno.Rows)
                             {
-                                ML.Alumno materia = new ML.Alumno();
-                                materia.Nombre = row[0].ToString();
-                                //row[1] = (row[1] == null) ? 0 : materia.Creditos;
-                                //materia.Creditos = (materia.Creditos == null) ? 0 : materia.Creditos;
-                                materia.ApellidoPaterno = byte.Parse(row[1].ToString());
-                                materia.Costo = decimal.Parse(row[2].ToString());
+                                ML.Alumno alumno = new ML.Alumno();
+                                alumno.Nombre = row[0].ToString();
+                                alumno.ApellidoPaterno = row[1].ToString();
+                                alumno.ApellidoMaterno = row[2].ToString();
 
-                                materia.Semestre = new ML.Semestre();
-                                materia.Semestre.IdSemestre = int.Parse(row[3].ToString());
+                                alumno.Semestre = new ML.Semestre();
+                                alumno.Semestre.IdSemestre = byte.Parse(row[3].ToString());
+                                alumno.FechaNacimiento = row[4].ToString();
+                                //row[1] = (row[1] == null) ? 0 : alumno.Creditos;
+                                //alumno.Creditos = (alumno.Creditos == null) ? 0 : alumno.Creditos;
 
-                                materia.Grupo = new ML.Grupo();
-                                materia.Grupo.Horario = row[4].ToString();
+                                alumno.Status = bool.Parse(row[5].ToString());
 
-                                materia.Grupo.Plantel = new ML.Plantel();
-                                materia.Grupo.Plantel.IdPlantel = int.Parse(row[5].ToString());
-
-                                materia.Status = bool.Parse(row[6].ToString());
-
-                                result.Objects.Add(materia);
+                                result.Objects.Add(alumno);
                             }
 
                             result.Correct = true;
 
                         }
 
-                        result.Object = tableMateria;
+                        result.Object = tableAlumno;
 
-                        if (tableMateria.Rows.Count > 1)
+                        if (tableAlumno.Rows.Count > 1)
                         {
                             result.Correct = true;
                         }
@@ -306,38 +301,30 @@ namespace BL
                 result.Objects = new List<object>();
                 //DataTable  //Rows //Columns
                 int i = 1;
-                foreach (ML.Materia materia in Object)
+                foreach (ML.Alumno alumno in Object)
                 {
                     ML.ErrorExcel error = new ML.ErrorExcel();
                     error.IdRegistro = i++;
 
-                    if (materia.Nombre == "")
+                    if (alumno.Nombre == "")
                     {
                         error.Mensaje += "Ingresar el nombre  ";
                     }
-                    if (materia.Creditos.ToString() == "")
+                    if (alumno.ApellidoPaterno == "")
                     {
                         error.Mensaje += "Ingresar los creditos ";
                     }
-                    if (materia.Costo.ToString() == "")
+                    if (alumno.ApellidoMaterno.ToString() == "")
                     {
                         error.Mensaje += "Ingresar el Costo ";
                     }
-                    if (materia.Semestre.IdSemestre.ToString() == "")
+                    if (alumno.Semestre.IdSemestre.ToString() == "")
                     {
                         error.Mensaje += "Ingresar el semestre ";
                     }
-                    if (materia.Grupo.Horario == "")
+                    if (alumno.FechaNacimiento == "")
                     {
                         error.Mensaje += "Ingresar el horario ";
-                    }
-                    if (materia.Grupo.Plantel.IdPlantel.ToString() == "")
-                    {
-                        error.Mensaje += "Ingresar el plantel ";
-                    }
-                    if (materia.Status.ToString() == "")
-                    {
-                        error.Mensaje += "Ingresar el status ";
                     }
 
                     if (error.Mensaje != null)

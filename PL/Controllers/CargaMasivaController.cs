@@ -21,7 +21,7 @@ namespace PL.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult MateriaCargaMasiva(ML.Alumno alumno)
+        public ActionResult AlumnoCargaMasiva(ML.Alumno alumno)
         {
             IFormFile archivo = Request.Form.Files["FileExcel"];
             //Session
@@ -51,11 +51,11 @@ namespace PL.Controllers
                             }
 
                             string connectionString = _configuration["ConnectionStringExcel:value"] + filePath;
-                            ML.Result resultMaterias = BL.Alumno.ConvertXSLXtoDataTable(connectionString);
+                            ML.Result resultAlumnos = BL.Alumno.ConvertXSLXtoDataTable(connectionString);
 
-                            if (resultMaterias.Correct)
+                            if (resultAlumnos.Correct)
                             {
-                                ML.Result resultValidacion = BL.Alumno.ValidarExcel(resultMaterias.Objects);
+                                ML.Result resultValidacion = BL.Alumno.ValidarExcel(resultAlumnos.Objects);
                                 if (resultValidacion.Objects.Count == 0)
                                 {
                                     resultValidacion.Correct = true;
@@ -85,19 +85,19 @@ namespace PL.Controllers
                 string rutaArchivoExcel = HttpContext.Session.GetString("PathArchivo");
                 string connectionString = _configuration["ConnectionStringExcel:value"] + rutaArchivoExcel;
 
-                ML.Result resultData = BL.Materia.ConvertXSLXtoDataTable(connectionString);
+                ML.Result resultData = BL.Alumno.ConvertXSLXtoDataTable(connectionString);
                 if (resultData.Correct)
                 {
                     ML.Result resultErrores = new ML.Result();
                     resultErrores.Objects = new List<object>();
 
-                    foreach (ML.Materia materiaItem in resultData.Objects)
+                    foreach (ML.Alumno alumnoItem in resultData.Objects)
                     {
 
-                        ML.Result resultAdd = BL.Materia.Add(materiaItem);
+                        ML.Result resultAdd = BL.Alumno.Add(alumnoItem);
                         if (!resultAdd.Correct)
                         {
-                            resultErrores.Objects.Add("No se insertó el Alumno con nombre: " + materiaItem.Nombre + " Creditos:" + materiaItem.Creditos + "Costo:" + materiaItem.Costo + " Error: " + resultAdd.ErrorMessage);
+                            resultErrores.Objects.Add("No se insertó el Alumno con nombre: " + alumnoItem.Nombre + " Creditos:" + alumnoItem.ApellidoPaterno + "Costo:" + alumnoItem.ApellidoMaterno + " Error: " + resultAdd.ErrorMessage);
                         }
                     }
                     if (resultErrores.Objects.Count > 0)
@@ -111,11 +111,11 @@ namespace PL.Controllers
                                 writer.WriteLine(ln);
                             }
                         }
-                        ViewBag.Message = "Las Materias No han sido registrados correctamente";
+                        ViewBag.Message = "Las Alumnos No han sido registrados correctamente";
                     }
                     else
                     {
-                        ViewBag.Message = "Las Materias han sido registrados correctamente";
+                        ViewBag.Message = "Las Alumnos han sido registrados correctamente";
                     }
 
                 }
