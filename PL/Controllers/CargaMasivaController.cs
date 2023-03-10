@@ -16,12 +16,12 @@ namespace PL.Controllers
 
         public ActionResult CargaMasiva()
         {
-            ML.Alumno alumno = new ML.Alumno();
+            ML.Result result = new ML.Result();
 
-            return View();
+            return View(result);
         }
         [HttpPost]
-        public ActionResult AlumnoCargaMasiva(ML.Alumno alumno)
+        public ActionResult CargaMasiva(ML.Alumno alumno)
         {
             IFormFile archivo = Request.Form.Files["FileExcel"];
             //Session
@@ -115,6 +115,7 @@ namespace PL.Controllers
                     }
                     else
                     {
+                        //borrar session
                         ViewBag.Message = "Las Alumnos han sido registrados correctamente";
                     }
 

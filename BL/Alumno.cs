@@ -227,7 +227,8 @@ namespace BL
             {
                 using (OleDbConnection context = new OleDbConnection(connString))
                 {
-                    string query = "SELECT * FROM [Hoja1$]";
+                    //string query = "SELECT * FROM [Hoja1$]";
+                    string query = "SELECT * FROM [Sheet1$]";
                     using (OleDbCommand cmd = new OleDbCommand())
                     {
                         cmd.CommandText = query;
@@ -251,14 +252,6 @@ namespace BL
                                 alumno.Nombre = row[0].ToString();
                                 alumno.ApellidoPaterno = row[1].ToString();
                                 alumno.ApellidoMaterno = row[2].ToString();
-
-                                alumno.Semestre = new ML.Semestre();
-                                alumno.Semestre.IdSemestre = byte.Parse(row[3].ToString());
-                                alumno.FechaNacimiento = row[4].ToString();
-                                //row[1] = (row[1] == null) ? 0 : alumno.Creditos;
-                                //alumno.Creditos = (alumno.Creditos == null) ? 0 : alumno.Creditos;
-
-                                alumno.Status = bool.Parse(row[5].ToString());
 
                                 result.Objects.Add(alumno);
                             }
@@ -318,15 +311,6 @@ namespace BL
                     {
                         error.Mensaje += "Ingresar el Costo ";
                     }
-                    if (alumno.Semestre.IdSemestre.ToString() == "")
-                    {
-                        error.Mensaje += "Ingresar el semestre ";
-                    }
-                    if (alumno.FechaNacimiento == "")
-                    {
-                        error.Mensaje += "Ingresar el horario ";
-                    }
-
                     if (error.Mensaje != null)
                     {
                         result.Objects.Add(error);
