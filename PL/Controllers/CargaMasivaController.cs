@@ -13,7 +13,9 @@ namespace PL.Controllers
             _configuration = configuration;
             _hostingEnvironment = hostingEnvironment;
         }
-
+        //exponer la logica de negocio a internet 
+        //HTTP 
+        //URL 
         public ActionResult CargaMasiva()
         {
             ML.Result result = new ML.Result();

@@ -15,7 +15,7 @@ namespace BL
                 using (DL.IespinozaProgramacionNcapasGf2023Context context = new DL.IespinozaProgramacionNcapasGf2023Context())
                 {
                     // query = context.AlumnoAdd(alumno.Nombre, alumno.ApellidoPaterno, alumno.ApellidoMaterno, alumno.Semestre.IdSemestre, alumno.Imagen);
-                    int query = context.Database.ExecuteSqlRaw($"AlumnoAdd '{alumno.Nombre}', '{alumno.ApellidoPaterno}', '{alumno.ApellidoMaterno}', {alumno.Semestre.IdSemestre}, '{alumno.FechaNacimiento}','{alumno.Imagen}'");
+                    int query = context.Database.ExecuteSqlRaw($"AlumnoAdd '{alumno.Nombre}', '{alumno.ApellidoPaterno}', '{alumno.ApellidoMaterno}', {alumno.Semestre.IdSemestre},'{alumno.Imagen}'");
 
                     if (query >= 1)
                     {
