@@ -10,6 +10,7 @@ namespace PL.Controllers
             ML.Result result = BL.Alumno.GetAll();
             ML.Alumno alumno = new ML.Alumno();
 
+           
             alumno.Alumnos = result.Objects;
             return View(alumno);
         }

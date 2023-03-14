@@ -303,6 +303,15 @@ namespace BL
                     {
                         error.Mensaje += "Ingresar el nombre  ";
                     }
+                    else
+                    {
+
+                    }
+
+                    alumno.Nombre = (alumno.Nombre == "") ? error.Mensaje += "Ingresar el nombre  " : alumno.Nombre;
+
+
+
                     if (alumno.ApellidoPaterno == "")
                     {
                         error.Mensaje += "Ingresar los creditos ";
