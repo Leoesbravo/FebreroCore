@@ -38,7 +38,7 @@ namespace BL
             }
             return result;
         }
-        public static ML.Result GetAll()
+        public static ML.Result GetAll(ML.Alumno alumno)
         {
             ML.Result result = new ML.Result();
 
@@ -47,7 +47,7 @@ namespace BL
                 using (DL.IespinozaProgramacionNcapasGf2023Context context = new DL.IespinozaProgramacionNcapasGf2023Context())
                 {
                     //var query = context.AlumnoGetAll().ToList();
-                    var query = context.Alumnos.FromSqlRaw("AlumnoGetAll").ToList();
+                    var query = context.Alumnos.FromSqlRaw($"AlumnoGetAll '{alumno.Nombre}', '{alumno.ApellidoPaterno}', '{alumno.ApellidoMaterno}'").ToList();
 
                     if (query != null)
                     {
@@ -55,7 +55,7 @@ namespace BL
 
                         foreach (var obj in query)
                         {
-                            ML.Alumno alumno = new ML.Alumno();
+                             alumno = new ML.Alumno();
 
                             alumno.IdAlumno = obj.IdAlumno;
                             alumno.Nombre = obj.Nombre;
@@ -69,7 +69,7 @@ namespace BL
                             alumno.Semestre.IdSemestre = obj.IdSemestre.Value;
                             alumno.Semestre.Nombre = obj.SemestreNombre;
 
-                            alumno.Status = obj.Status.Value;
+                            //alumno.Status = obj.Status;
 
                             result.Objects.Add(alumno);
                         }

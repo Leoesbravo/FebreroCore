@@ -19,8 +19,6 @@ public partial class Alumno
 
     public string? Imagen { get; set; }
 
-    public bool? Status { get; set; }
-
     public virtual ICollection<Horario> Horarios { get; } = new List<Horario>();
 
     public virtual Semestre? IdSemestreNavigation { get; set; }
