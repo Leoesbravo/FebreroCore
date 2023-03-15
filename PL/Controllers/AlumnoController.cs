@@ -34,7 +34,10 @@ namespace PL.Controllers
 
             try
             {
-
+                //SOAP 
+                //REST (JSON) Serializacion y deserializacion Postman swagger(probar el endpoint, validarlo)
+                //Probar(Consumo) web services : postman-swagger
+                //Consumirlo en el proyecto : el controlador de MVC o AJAX 
                 using (var client = new HttpClient())
                 {
                     string urlApi = _configuration["urlApi"];
@@ -123,7 +126,6 @@ namespace PL.Controllers
         [HttpPost]
         public ActionResult Form(ML.Alumno alumno)
         {
-            //HttpPostedFileBase file = Request.Files["fuImage"];
             IFormFile file = Request.Form.Files["fuImage"];
 
             if (file != null)
@@ -132,58 +134,76 @@ namespace PL.Controllers
 
                 alumno.Imagen = Convert.ToBase64String(imagen);
             }
-
-
-            ML.Result result = new ML.Result();
-            if (ModelState.IsValid == true)
+            using (var client = new HttpClient())
             {
-                if (alumno.IdAlumno == 0)
+                client.BaseAddress = new Uri(_configuration["urlApi"]);
+
+                //HTTP POST
+                var postTask = client.PostAsJsonAsync<ML.Alumno>("Alumno/Add",alumno );
+                postTask.Wait();
+
+                var result = postTask.Result;
+                if (result.IsSuccessStatusCode)
                 {
-                    //add 
-                    result = BL.Alumno.Add(alumno);
-
-                    if (result.Correct)
-                    {
-                        ViewBag.Message = "Se completo el registro satisfactoriamente";
-                    }
-                    else
-                    {
-                        ViewBag.Message = "Ocurrio un error al insertar el registro";
-                    }
-
-                    return View("Modal");
+                    ViewBag.Mensaje = "Se ha registrado el alumno";
+                    return PartialView("Modal");
                 }
                 else
                 {
-
-                    //update
-                    //result = BL.Alumno.Add(alumno);
-
-                    //if (result.Correct)
-                    //{
-                    //    ViewBag.Message = "Se actualizo la información satisfactoriamente";
-                    //}
-                    //else
-                    //{
-                    //    ViewBag.Message = "Ocurrio un error al actualizar el registro";
-                    //}
-                    return View("Modal");
+                    ViewBag.Mensaje = "No se ha registrado el alumno";
+                    return PartialView("Modal");
                 }
             }
-            else
-            {
-                alumno.Semestre = new ML.Semestre();
-                alumno.Horario = new ML.Horarios();
-                alumno.Horario.Grupo = new ML.Grupo();
-                alumno.Horario.Grupo.Plantel = new ML.Plantel();
+            //ML.Result result = new ML.Result();
+            //if (ModelState.IsValid == true)
+            //{
+            //    if (alumno.IdAlumno == 0)
+            //    {
+            //        //add 
+            //        result = BL.Alumno.Add(alumno);
 
-                ML.Result resultSemestre = BL.Semestre.GetAll();
-                ML.Result resultPlantel = BL.Plantel.GetAll();
+            //        if (result.Correct)
+            //        {
+            //            ViewBag.Message = "Se completo el registro satisfactoriamente";
+            //        }
+            //        else
+            //        {
+            //            ViewBag.Message = "Ocurrio un error al insertar el registro";
+            //        }
 
-                alumno.Semestre.Semestres = resultSemestre.Objects;
-                alumno.Horario.Grupo.Plantel.Planteles = resultPlantel.Objects;
-                return View(alumno);
-            }
+            //        return View("Modal");
+            //    }
+            //    else
+            //    {
+
+            //        //update
+            //        //result = BL.Alumno.Add(alumno);
+
+            //        //if (result.Correct)
+            //        //{
+            //        //    ViewBag.Message = "Se actualizo la información satisfactoriamente";
+            //        //}
+            //        //else
+            //        //{
+            //        //    ViewBag.Message = "Ocurrio un error al actualizar el registro";
+            //        //}
+            //        return View("Modal");
+            //    }
+            //}
+            //else
+            //{
+            //    alumno.Semestre = new ML.Semestre();
+            //    alumno.Horario = new ML.Horarios();
+            //    alumno.Horario.Grupo = new ML.Grupo();
+            //    alumno.Horario.Grupo.Plantel = new ML.Plantel();
+
+            //    ML.Result resultSemestre = BL.Semestre.GetAll();
+            //    ML.Result resultPlantel = BL.Plantel.GetAll();
+
+            //    alumno.Semestre.Semestres = resultSemestre.Objects;
+            //    alumno.Horario.Grupo.Plantel.Planteles = resultPlantel.Objects;
+            //    return View(alumno);
+            //}
 
         }
 

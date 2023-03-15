@@ -47,7 +47,7 @@ namespace BL
                 using (DL.IespinozaProgramacionNcapasGf2023Context context = new DL.IespinozaProgramacionNcapasGf2023Context())
                 {
                     //var query = context.AlumnoGetAll().ToList();
-                    var query = context.Alumnos.FromSqlRaw($"AlumnoGetAll '{alumno.Nombre}', '{alumno.ApellidoPaterno}', '{alumno.ApellidoMaterno}'").ToList();
+                    var query = context.Alumnos.FromSqlRaw($"AlumnoGetAll").ToList();
 
                     if (query != null)
                     {
